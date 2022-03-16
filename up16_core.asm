@@ -1,3 +1,7 @@
+; core uP16 instruction set.
+; the uP16 soft-core processor is used in the NTU CE2003 Digital Systems Design
+; course to introduce undergraduates to basic processor design.
+
 #bits 18 ; 18 bit CPU
 
 #bankdef program {
@@ -21,12 +25,6 @@
 	assert(reladdr <=  127)
 	assert(reladdr >= -128)
 	reladdr`8
-}
-
-#ruledef {
-	jumpimm {target} => {
-		jump_dst_calc(target)
-	}
 }
 
 #ruledef {
@@ -69,48 +67,8 @@
 	bne  r{rd: reg}, r{rs: reg}, {dst} => asm { op 0x09, rd rd, rs rs, if jump_dst_calc(dst) }
 	bltz r{rd: reg}, r{rs: reg}, {dst} => asm { op 0x0a, rd rd, rs rs, if jump_dst_calc(dst) }
 	bgtz r{rd: reg}, r{rs: reg}, {dst} => asm { op 0x0b, rd rd, rs rs, if jump_dst_calc(dst) }
+    ; Short jump - +127, -128.
+    ; Accepts absolute jump target, and converts that to a relative offset
+    ; internally.
 	jmp {dst} => asm { beq r0, r0, dst }
 }
-
-nop
-start:
-lli r4, #0x71
-nop
-lli r1, #1
-lli r2, #2
-lui r4, r4, #0xf9
-add r2, r1
-mov r5, r3
-addi r3, r1, #1
-addi r6, r4, #5
-jmp proc3
-
-proc2:
-nop
-add r4, r1
-or r2, r4
-nop
-
-proc3:
-sw r4, r1, #0
-sw r5, r1, #1
-nop
-lw r6, r1, #0
-add r1, r6
-lw r7, r1, #1
-add r3, r1
-add r5, r3
-nop
-lli r3, #0
-sub r6, r2
-bne r3, r0, end
-nop
-add r1, r2
-nand r2, r1
-nop
-nop
-nop
-
-end:
-not r1, r4
-jmp start

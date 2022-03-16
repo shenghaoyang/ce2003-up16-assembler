@@ -3,14 +3,14 @@
 CASM 	  ?= customasm
 CASMFLAGS ?= -f binstr
 
-OBJS := irom.coe irom.txt
+OBJS := task1.coe task1.txt
 
 all: $(OBJS)
 
-irom.coe: irom.txt
+%.coe: %.txt
 	./convert.py < $< > $@
 
-irom.txt: up16.asm
+%.txt: %.asm
 	$(CASM) $(CASMFLAGS) -o $@ $^
 
 clean:
