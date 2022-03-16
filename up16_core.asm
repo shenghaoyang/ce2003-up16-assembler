@@ -17,7 +17,7 @@
 }
 
 #ruledef {
-	op {op_num: u4}, rd {rd: reg}, rs {rs: reg}, if {if: u8} => op_num @ rd @ rs @ if
+	op {op_num: u4}, rd {rd: reg}, rs {rs: reg}, if {if} => op_num @ rd @ rs @ if`8
 }
 
 #fn jump_dst_calc(target) => {
